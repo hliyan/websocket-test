@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<pre id="log"></pre>
+<input id="input" />
+<script>
+  const ws = new WebSocket('ws://localhost:8080/');
+  ws.onopen = function() {
+    log('CONNECTED.');
+  };
+  ws.onclose = function() {
+    log('DISCONNECTED.');
+  };
+  ws.onmessage = function(event) {
+    log('  ' + event.data);
+  };
+
+  function log(msg) {
+    document.getElementById('log').textContent += msg + '\n';
+  }
+
+  document.getElementById('input').addEventListener('keyup', (e) => {
+    if (e.code == 'Enter') {
+      let text = e.target.value;
+      log('> ' + text);
+      e.target.value = '';
+      ws.send(text);
+    }
+  });
+</script>
